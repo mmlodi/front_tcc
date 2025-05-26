@@ -6,7 +6,32 @@ const API_BASE_URL = 'http://localhost:8081';
 // Usuários (User)
 export const getUsers = (userId) => axios.get(`${API_BASE_URL}/users`);
 export const createUser = (userDto) => axios.post(`${API_BASE_URL}/user/`, userDto);
+export const login = async (username, password) => {
+  try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body:{
+            'username': username,
+            'password': password
+          }
+      });
 
+      if (response.ok) {
+          console.log("Sucesso no login")
+          return response
+      } else {
+          const errorData = await response.json();
+          console.error('Login failed', errorData);
+          return { error: 'Login failed', details: errorData };
+      }
+  } catch (error) {
+      console.error('An error occurred during login:', error);
+      return { error: 'An unexpected error occurred', details: error.message };
+  }
+};
 
 
 // Carteiras (Wallet)
